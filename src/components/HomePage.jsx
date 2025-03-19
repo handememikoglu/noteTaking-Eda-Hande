@@ -13,14 +13,9 @@ const options = [
     "TypeScript",
 ];
 
-export default function HomePage() {
+export default function HomePage({ notes, setNotes, archiveNote }) {
     const [showInput, setShowInput] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
-    const [notes, setNotes] = useState(
-        localStorage.getItem("notes")
-            ? JSON.parse(localStorage.getItem("notes"))
-            : []
-    );
     const [noteContent, setNoteContent] = useState("");
 
     const ChoseTag = (tag) => {
@@ -140,6 +135,12 @@ export default function HomePage() {
                                     </span>
                                 ))}
                             </div>
+                            <button
+                                onClick={() => archiveNote(note.id)}
+                                className="mt-2 px-3 py-1 bg-yellow-500 text-white rounded-md cursor-pointer"
+                            >
+                                Archive
+                            </button>
                             <p className="mt-2 text-sm text-gray-500">
                                 {note.date}
                             </p>
