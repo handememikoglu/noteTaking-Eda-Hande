@@ -13,7 +13,7 @@ const options = [
     "TypeScript",
 ];
 
-export default function HomePage({ notes, setNotes, archiveNote }) {
+export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
     const [showInput, setShowInput] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
     const [noteContent, setNoteContent] = useState("");
@@ -71,7 +71,7 @@ export default function HomePage({ notes, setNotes, archiveNote }) {
             <div className="flex items-center px-16 py-8">
                 <button
                     onClick={() => setShowInput(!showInput)}
-                    className="w-full py-[10px] bg-blue-600 rounded-lg text-blue-50"
+                    className="w-full py-[10px] bg-blue-600 rounded-lg text-blue-50 cursor-pointer"
                 >
                     + Create New Note
                 </button>

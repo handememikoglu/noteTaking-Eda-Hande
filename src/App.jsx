@@ -42,27 +42,49 @@ function App() {
         return () => window.removeEventListener("popstate", handlePopState);
     }, []);
 
+    const changeMenu = (e, page) => {
+        e.preventDefault();
+        navigate(page);
+    };
+
     const navigate = (path) => {
         window.history.pushState({}, "", path);
         setPage(path);
     };
     return (
-        <div className="flex">
-            <Sidebar navigate={navigate} currentPage={page} />
-            <div className="flex-1 p-4">
-                {page === "/" && (
-                    <HomePage
-                        notes={notes}
-                        setNotes={setNotes}
-                        archiveNote={archiveNote}
-                    />
-                )}
-                {page === "/Arama" && <Search />}
-                {page === "/Arsiv" && <Archive archivedNotes={archivedNotes} />}
-                {page === "/Etiketler" && <Tags />}
-                {page === "/Ayarlar" && <Settings />}
+        <>
+            <button
+                className="flex items-center ml-3 gap-2 cursor-pointer"
+                onClick={(e) => changeMenu(e, "/")}
+            >
+                <img className="w-5" src="/feather.png" alt="Feather" />
+                <h1 className="font-bold text-xl">Notes</h1>
+            </button>
+            <div className="flex">
+                <Sidebar
+                    navigate={navigate}
+                    currentPage={page}
+                    changeMenu={changeMenu}
+                />
+                <div className="flex-1 p-4">
+                    {page === "/" && (
+                        <HomePage
+                            notes={notes}
+                            setNotes={setNotes}
+                            archiveNote={archiveNote}
+                            navigate={navigate}
+                            changeMenu={changeMenu}
+                        />
+                    )}
+                    {page === "/Arama" && <Search />}
+                    {page === "/Arsiv" && (
+                        <Archive archivedNotes={archivedNotes} />
+                    )}
+                    {page === "/Etiketler" && <Tags />}
+                    {page === "/Ayarlar" && <Settings />}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
