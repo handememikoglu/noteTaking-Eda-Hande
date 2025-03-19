@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
+import HomePage from "./components/HomePage";
+import Search from "./components/Search";
+import Archive from "./components/Archive";
+import Tags from "./components/Tags";
+import Settings from "./components/Settings"
 
 function App() {
     const [page,setPage] = useState(window.location.pathname);
@@ -16,9 +21,16 @@ function App() {
         setPage(path);
     }
     return (
-        <>
-            <Sidebar navigate={navigate}/>
-        </>
+        <div className="flex">
+            <Sidebar navigate={navigate} currentPage={page} />
+            <div className="flex-1 p-4">
+                {page === "/" && <HomePage />}
+                {page === "/Arama" && <Search />}
+                {page === "/Arsiv" && <Archive />}
+                {page === "/Etiketler" && <Tags />}
+                {page === "/Ayarlar" && <Settings />}
+            </div>
+        </div>
     );
 }
 
