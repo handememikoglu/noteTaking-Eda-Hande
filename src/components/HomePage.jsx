@@ -1,41 +1,70 @@
+import { useEffect, useState } from "react";
 
-import { useState } from "react";
-
-const options = ["Cooking", "Dev", "Fitness", "Health", "Personal", "React", "Recipes", "Shopping", "Travel", "TypeScript"];
+const options = [
+    "Cooking",
+    "Dev",
+    "Fitness",
+    "Health",
+    "Personal",
+    "React",
+    "Recipes",
+    "Shopping",
+    "Travel",
+    "TypeScript",
+];
 
 export default function HomePage() {
     const [showInput, setShowInput] = useState(false);
-    const [selectedTags, setSelectedTags] = useState([]); 
-    const [notes, setNotes] = useState([]); 
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [notes, setNotes] = useState(
+        localStorage.getItem("notes")
+            ? JSON.parse(localStorage.getItem("notes"))
+            : []
+    );
     const [noteContent, setNoteContent] = useState("");
 
     const ChoseTag = (tag) => {
         setSelectedTags((prev) =>
-            prev.includes(tag) ? prev.filter((item) => item !== tag) : [...prev, tag]
+            prev.includes(tag)
+                ? prev.filter((item) => item !== tag)
+                : [...prev, tag]
         );
     };
 
     const handleSubmit = (e) => {
-        setNoteContent(e.target.value); 
+        setNoteContent(e.target.value);
     };
 
     const handleCreateNote = () => {
         if (noteContent) {
             const newNote = {
-                id: Date.now(), 
-                content: noteContent, 
+                id: Date.now(),
+                content: noteContent,
                 tags: selectedTags,
                 date: new Date().toLocaleDateString(),
             };
 
-            setNotes((prev) => [...prev, newNote]); 
-            setNoteContent(""); 
-            setSelectedTags([]); 
-            setShowInput(false); 
+            setNotes((prev) => [...prev, newNote]);
+            setNoteContent("");
+            setSelectedTags([]);
+            setShowInput(false);
         } else {
             alert("Lütfen not içeriğini girin!");
         }
     };
+
+    useEffect(() => {
+        console.log(notes);
+
+        localStorage.setItem(
+            "notes",
+            JSON.stringify(
+                notes.filter(
+                    (note) => note.noteContent != "" && note.selectedTags != ""
+                )
+            )
+        );
+    }, [notes]);
 
     const date = new Date();
     const year = date.getFullYear();
@@ -47,7 +76,8 @@ export default function HomePage() {
             <div className="flex items-center px-16 py-8">
                 <button
                     onClick={() => setShowInput(!showInput)}
-                    className="w-full py-[10px] bg-blue-600 rounded-lg text-blue-50">
+                    className="w-full py-[10px] bg-blue-600 rounded-lg text-blue-50"
+                >
                     + Create New Note
                 </button>
             </div>
@@ -71,8 +101,11 @@ export default function HomePage() {
                                     key={tag}
                                     onClick={() => ChoseTag(tag)}
                                     className={`px-3 py-1 rounded-md ${
-                                        selectedTags.includes(tag) ? "bg-blue-600 text-white": "bg-gray-100 text-gray-600"
-                                    }`}>
+                                        selectedTags.includes(tag)
+                                            ? "bg-blue-600 text-white"
+                                            : "bg-gray-100 text-gray-600"
+                                    }`}
+                                >
                                     {tag}
                                 </button>
                             ))}
@@ -82,7 +115,8 @@ export default function HomePage() {
 
                     <button
                         onClick={handleCreateNote}
-                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md">
+                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md"
+                    >
                         Save Note
                     </button>
                 </div>
@@ -91,16 +125,24 @@ export default function HomePage() {
                 <h3 className="font-semibold">Saved Notes</h3>
                 <div className="mt-4">
                     {notes.map((note) => (
-                        <div key={note.id} className=" p-4  mb-4 border-b-1 border-gray-400">
+                        <div
+                            key={note.id}
+                            className=" p-4  mb-4 border-b-1 border-gray-400"
+                        >
                             <p>{note.content}</p>
                             <div className="flex gap-2 mt-2">
                                 {note.tags.map((tag) => (
-                                    <span key={tag} className="px-3 py-1 bg-gray-300 text-black rounded-md">
+                                    <span
+                                        key={tag}
+                                        className="px-3 py-1 bg-gray-300 text-black rounded-md"
+                                    >
                                         {tag}
                                     </span>
                                 ))}
                             </div>
-                            <p className="mt-2 text-sm text-gray-500">{note.date}</p>
+                            <p className="mt-2 text-sm text-gray-500">
+                                {note.date}
+                            </p>
                         </div>
                     ))}
                 </div>
