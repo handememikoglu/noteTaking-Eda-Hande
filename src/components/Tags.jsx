@@ -1,1 +1,4 @@
-export default function Tags() {}
+export default function Tags({options}) {
+    console.log(options);
+    
+}

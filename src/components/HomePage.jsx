@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Tags from "./Tags";
 
 const options = [
     "Cooking",
@@ -68,6 +69,7 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
 
     return (
         <div>
+             <Tags options={options}   />
             <div className="flex items-center px-16 py-8">
                 <button
                     onClick={() => setShowInput(!showInput)}
@@ -87,7 +89,6 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
                         placeholder="Enter note..."
                         className="w-full p-2 border rounded-md"
                     />
-
                     <div className="mt-4">
                         <label className="block font-semibold">Tags</label>
                         <div className="flex flex-wrap gap-2 mt-2">
