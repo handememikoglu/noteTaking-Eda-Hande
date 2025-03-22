@@ -80,7 +80,7 @@ function App() {
                     {page === "/Arsiv" && (
                         <Archive archivedNotes={archivedNotes} />
                     )}
-                    {page === "/Etiketler" && <Tags />}
+                    {page === "/Etiketler" && <Tags notes={notes} archivedNotes={archivedNotes}/>}
                     {page === "/Ayarlar" && <Settings />}
                 </div>
             </div>

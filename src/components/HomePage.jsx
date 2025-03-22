@@ -18,7 +18,15 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
     const [showInput, setShowInput] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
     const [noteContent, setNoteContent] = useState("");
+    const [selectedFilter, setSelectedFilter] = useState([]);
 
+    const filteredNotes = selectedFilter.length
+        ? notes.filter((note) => 
+            selectedFilter.some((filter) => note.tags.includes(filter))
+        )
+        : notes;
+        console.log(filteredNotes);
+        
     const ChoseTag = (tag) => {
         setSelectedTags((prev) =>
             prev.includes(tag)
@@ -65,11 +73,10 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
     const date = new Date();
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
-    const currentDay = date.getDay();
+    const currentDay = date.getDate();
 
     return (
         <div>
-             <Tags options={options}   />
             <div className="flex items-center px-16 py-8">
                 <button
                     onClick={() => setShowInput(!showInput)}
@@ -78,7 +85,7 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
                     + Create New Note
                 </button>
             </div>
-
+    
             {showInput && (
                 <div className="p-4  rounded-lg">
                     <input
@@ -108,7 +115,7 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
                         </div>
                         <span>{`${currentDay}/${month}/${year}`}</span>
                     </div>
-
+    
                     <button
                         onClick={handleCreateNote}
                         className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md"
@@ -117,21 +124,16 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
                     </button>
                 </div>
             )}
+    
             <div className="mt-8">
                 <h3 className="font-semibold">Saved Notes</h3>
                 <div className="mt-4">
-                    {notes.map((note) => (
-                        <div
-                            key={note.id}
-                            className=" p-4  mb-4 border-b-1 border-gray-400"
-                        >
+                    {filteredNotes.map((note) => (
+                        <div key={note.id} className="p-4 mb-4 border-b-1 border-gray-400">
                             <p>{note.content}</p>
                             <div className="flex gap-2 mt-2">
                                 {note.tags.map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="px-3 py-1 bg-gray-300 text-black rounded-md"
-                                    >
+                                    <span key={tag} className="px-3 py-1 bg-gray-300 text-black rounded-md">
                                         {tag}
                                     </span>
                                 ))}
@@ -142,9 +144,7 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
                             >
                                 Archive
                             </button>
-                            <p className="mt-2 text-sm text-gray-500">
-                                {note.date}
-                            </p>
+                            <p className="mt-2 text-sm text-gray-500">{note.date}</p>
                         </div>
                     ))}
                 </div>
