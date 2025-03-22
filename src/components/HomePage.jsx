@@ -25,6 +25,7 @@ export default function HomePage({
     const [selectedTags, setSelectedTags] = useState([]);
     const [noteContent, setNoteContent] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
+    const [filteredNotes, setLocalFilteredNotes] = useState(notes);
 
     const ChoseTag = (tag) => {
         setSelectedTags((prev) =>
@@ -39,39 +40,32 @@ export default function HomePage({
     };
 
     const handleCreateNote = () => {
-        if (noteContent) {
-            const newNote = {
-                id: Date.now(),
-                content: noteContent,
-                tags: selectedTags,
-                date: new Date().toLocaleDateString(),
-            };
-
-            setNotes((prev) => [...prev, newNote]);
-            setNoteContent("");
-            setSelectedTags([]);
-            setShowInput(false);
-        } else {
-            alert("Lütfen not içeriğini girin!");
+        if (!noteContent.trim() || selectedTags.length === 0) {
+            alert("Lütfen not içeriğini girin ve en az bir etiket seçin!");
+            return;
         }
-    };
+
+        const newNote = {
+            id: Date.now(),
+            content: noteContent,
+            tags: selectedTags,
+            date: new Date().toLocaleDateString(),
+        };
+
+        setNotes((prev) => [...prev, newNote]);
+        setNoteContent("");
+        setSelectedTags([]);
+        setShowInput(false);
+    };;
 
     useEffect(() => {
-        console.log(notes);
-
-        localStorage.setItem(
-            "notes",
-            JSON.stringify(
-                notes.filter(
-                    (note) => note.noteContent != "" && note.selectedTags != ""
-                )
-            )
-        );
+        localStorage.setItem("notes", JSON.stringify(notes));
     }, [notes]);
 
     useEffect(() => {
         if (!searchQuery) {
             setFilteredNotes(notes);
+            setLocalFilteredNotes(notes);
             return;
         }
 
@@ -86,6 +80,7 @@ export default function HomePage({
         );
 
         setFilteredNotes(filtered);
+        setLocalFilteredNotes(filtered);
         console.log(filtered);
     }, [searchQuery, notes, setFilteredNotes]);
 

@@ -29,26 +29,42 @@ export default function Search({ notes, setFilteredNotes, filteredNotes }) {
         console.log(filtered);
     }, [filter, notes, setFilteredNotes]);
 
+    // const handleSearchChange = (e) => {
+    //     const key = e.target.name;
+    //     const value = e.targer.value;
+    //     setFilter({
+    //         ...filter,
+    //         [key]: value,
+    //     });
+    //     if (value) {
+    //         searchParams.set(key, value);
+    //     } else {
+    //         searchParams.delete(key);
+    //     }
+    //     if (searchParams.toString()) {
+    //         window.history.pushState({}, "", `?${searchParams.toString()}`);
+    //     } else {
+    //         console.log("search yok");
+    //         window.history.pushState({}, "", "/");
+    //     }
+    // };
+
     const handleSearchChange = (e) => {
         const key = e.target.name;
-        const value = e.targer.value;
-        setFilter({
-            ...filter,
+        const value = e.target.value;
+        setFilter((prev) => ({
+            ...prev,
             [key]: value,
-        });
+        }));
+        
         if (value) {
             searchParams.set(key, value);
         } else {
             searchParams.delete(key);
         }
-        if (searchParams.toString()) {
-            window.history.pushState({}, "", `?${searchParams.toString()}`);
-        } else {
-            console.log("search yok");
-            window.history.pushState({}, "", "/");
-        }
+        
+        window.history.pushState({}, "", searchParams.toString() ? `?${searchParams.toString()}` : "/");
     };
-
     return (
         <div>
             <div className="flex items-center gap-2 p-2 border rounded-lg mb-4">
@@ -64,7 +80,7 @@ export default function Search({ notes, setFilteredNotes, filteredNotes }) {
             </div>
 
             <div>
-                {(filteredNotes ?? []).length > 0 ? (
+            {filteredNotes && filteredNotes.length > 0 ? (
                     filteredNotes.map((note) => (
                         <div key={note.id} className="p-4 border-b">
                             <p>{note.content}</p>
