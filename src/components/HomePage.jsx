@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
 
 const options = [
     "Cooking",
@@ -13,10 +14,17 @@ const options = [
     "TypeScript",
 ];
 
-export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
+export default function HomePage({
+    notes,
+    setNotes,
+    archiveNote,
+    showSearch,
+    setFilteredNotes,
+}) {
     const [showInput, setShowInput] = useState(false);
     const [selectedTags, setSelectedTags] = useState([]);
     const [noteContent, setNoteContent] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     const ChoseTag = (tag) => {
         setSelectedTags((prev) =>
@@ -61,13 +69,45 @@ export default function HomePage({ notes, setNotes, archiveNote, changeMenu }) {
         );
     }, [notes]);
 
+    useEffect(() => {
+        if (!searchQuery) {
+            setFilteredNotes(notes);
+            return;
+        }
+
+        const filtered = notes.filter(
+            (note) =>
+                note.content
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                note.tags.some((tag) =>
+                    tag.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+        );
+
+        setFilteredNotes(filtered);
+        console.log(filtered);
+    }, [searchQuery, notes, setFilteredNotes]);
+
     const date = new Date();
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const currentDay = date.getDay();
 
     return (
-        <div>
+        <div className="p-4">
+            {showSearch && (
+                <div className="flex items-center gap-2 p-2 border rounded-lg mb-4">
+                    <FaSearch />
+                    <input
+                        type="text"
+                        placeholder="Search by title, content, or tags..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full p-2 border rounded-md"
+                    />
+                </div>
+            )}
             <div className="flex items-center px-16 py-8">
                 <button
                     onClick={() => setShowInput(!showInput)}
