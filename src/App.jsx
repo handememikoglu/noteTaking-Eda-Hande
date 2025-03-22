@@ -18,6 +18,8 @@ function App() {
             ? JSON.parse(localStorage.getItem("archivedNotes"))
             : []
     );
+    const [filteredNotes, setFilteredNotes] = useState([]);
+
     useEffect(() => {
         console.log(notes);
         console.log(archivedNotes);
@@ -26,13 +28,14 @@ function App() {
         localStorage.setItem("archivedNotes", JSON.stringify(archivedNotes));
     }, [notes, archivedNotes]);
 
-    const archiveNote = (id) => {
-        const noteToArchive = notes.find((note) => note.id === id);
+    const [showSearch, setShowSearch] = useState(false);
 
-        if (noteToArchive) {
-            setNotes(notes.filter((note) => note.id !== id));
-            setArchivedNotes([...archivedNotes, noteToArchive]);
-        }
+    const archiveNote = (id) => {
+        setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+        setArchivedNotes((prevArchived) => [
+            ...prevArchived,
+            notes.find((note) => note.id === id),
+        ]);
     };
 
     useEffect(() => {
@@ -65,6 +68,7 @@ function App() {
                     navigate={navigate}
                     currentPage={page}
                     changeMenu={changeMenu}
+                    setShowSearch={setShowSearch}
                 />
                 <div className="flex-1 p-4">
                     {page === "/" && (
@@ -74,11 +78,23 @@ function App() {
                             archiveNote={archiveNote}
                             navigate={navigate}
                             changeMenu={changeMenu}
+                            showSearch={showSearch}
+                            setFilteredNotes={setFilteredNotes}
                         />
                     )}
-                    {page === "/Arama" && <Search />}
+                    {page === "/Arama" && (
+                        <Search
+                            notes={notes}
+                            filteredNotes={filteredNotes}
+                            setFilteredNotes={setFilteredNotes}
+                        />
+                    )}
                     {page === "/Arsiv" && (
-                        <Archive archivedNotes={archivedNotes} />
+                        <Archive
+                            archivedNotes={archivedNotes}
+                            setNotes={setNotes}
+                            setArchivedNotes={setArchivedNotes}
+                        />
                     )}
                     {page === "/Etiketler" && <Tags notes={notes} archivedNotes={archivedNotes}/>}
                     {page === "/Ayarlar" && <Settings />}
