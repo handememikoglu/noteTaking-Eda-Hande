@@ -1,7 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import { FaArrowUpFromBracket, FaGear, FaHouse, FaTag } from "react-icons/fa6";
 
-export default function Sidebar({ currentPage, changeMenu }) {
+export default function Sidebar({ currentPage, changeMenu, setShowSearch }) {
     return (
         <div className="fixed bottom-0 w-full md:w-64 bg-gray-100 text-white flex md:flex-col md:h-screen md:relative">
             <ul className="flex md:flex-col w-full justify-around md:justify-start">
@@ -19,17 +19,12 @@ export default function Sidebar({ currentPage, changeMenu }) {
                     </a>
                 </li>
                 <li className="p-6">
-                    <a
-                        href="/Arama"
-                        onClick={(e) => changeMenu(e, "/Arama")}
+                    <button
+                        onClick={() => setShowSearch((prev) => !prev)}
                         className="cursor-pointer"
                     >
-                        <FaSearch
-                            className={`text-gray-500 ${
-                                currentPage === "/Arama" ? "text-blue-500" : ""
-                            }`}
-                        />
-                    </a>
+                        <FaSearch className="text-gray-500" />
+                    </button>
                 </li>
                 <li className="p-6">
                     <a
